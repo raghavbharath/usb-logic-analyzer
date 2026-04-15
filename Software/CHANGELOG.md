@@ -20,7 +20,7 @@ Put all software notes/changelog stuff here. Try to format something like below 
 
 This format is adopted from [keepachangelog.com](https://keepachangelog.com).
 
-## 4/14/2025 - 10:41 pm
+## 3ae0cc6
 
 ### Changed 
 
