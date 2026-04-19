@@ -1,0 +1,21 @@
+<map id="STM32F4xx_HAL_Driver" name="STM32F4xx_HAL_Driver">
+<area shape="rect" id="Node000003" href="$d2/d28/group__CORTEX.html" title="CORTEX HAL module driver." alt="" coords="263,5,337,31"/>
+<area shape="rect" id="Node000004" href="$d8/de5/group__DMA.html" title="DMA HAL module driver." alt="" coords="273,55,327,80"/>
+<area shape="rect" id="Node000005" href="$df/d31/group__DMAEx.html" title="DMA Extended HAL module driver." alt="" coords="265,104,335,129"/>
+<area shape="rect" id="Node000019" href="$dd/d57/group__EXTI.html" title=" " alt="" coords="275,153,325,179"/>
+<area shape="rect" id="Node000006" href="$dd/d7d/group__FLASH.html" title="FLASH HAL module driver." alt="" coords="267,203,333,228"/>
+<area shape="rect" id="Node000007" href="$d5/d4c/group__FLASHEx.html" title="FLASH HAL Extension module driver." alt="" coords="259,252,341,277"/>
+<area shape="rect" id="Node000008" href="$d6/dc6/group__FLASH__RAMFUNC.html" title="FLASH functions executed from RAM." alt="" coords="232,301,368,327"/>
+<area shape="rect" id="Node000009" href="$de/d2b/group__GPIO.html" title="GPIO HAL module driver." alt="" coords="273,351,327,376"/>
+<area shape="rect" id="Node000002" href="$d2/dbf/group__HAL.html" title="HAL module driver." alt="" coords="276,400,324,425"/>
+<area shape="rect" id="Node000010" href="$d1/d7c/group__PCD.html" title="PCD HAL module driver." alt="" coords="275,449,325,475"/>
+<area shape="rect" id="Node000011" href="$de/d1e/group__PCDEx.html" title="PCD Extended HAL module driver." alt="" coords="267,499,333,524"/>
+<area shape="rect" id="Node000012" href="$d0/dd5/group__PWR.html" title="PWR HAL module driver." alt="" coords="274,548,326,573"/>
+<area shape="rect" id="Node000013" href="$de/da7/group__PWREx.html" title="PWR HAL module driver." alt="" coords="266,597,334,623"/>
+<area shape="rect" id="Node000014" href="$d6/d1a/group__RCC.html" title="RCC HAL module driver." alt="" coords="275,647,325,672"/>
+<area shape="rect" id="Node000015" href="$d7/d54/group__RCCEx.html" title="RCCEx HAL module driver." alt="" coords="267,696,333,721"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,425,184,451"/>
+<area shape="rect" id="Node000016" href="$db/d27/group__TIM.html" title="TIM HAL module driver." alt="" coords="277,745,323,771"/>
+<area shape="rect" id="Node000017" href="$dd/dbf/group__TIMEx.html" title="TIM Extended HAL module driver." alt="" coords="269,795,331,820"/>
+<area shape="rect" id="Node000018" href="$d8/d35/group__UART.html" title="HAL UART module driver." alt="" coords="271,844,329,869"/>
+</map>
