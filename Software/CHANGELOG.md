@@ -19,6 +19,19 @@ Put all software notes/changelog stuff here. Try to format something like below 
 ```
 
 This format is adopted from [keepachangelog.com](https://keepachangelog.com).
+## [Unreleased] - 2026-04-19 8:30pm
+
+### Added
+
+- Added the Circular "Ping-Pong" system we discussed using a 1024-byte array called dma_buf. Basically, I split the memory into 2 512-byte sections. Initially, the DMA would start filling the buffer with samples from 0-512 blocks. **Keep in mind: It's 512, but we basically transmit it in boxes of 64 bytes at a time since USB can only handle 64.** Then, once the buffer is full, the CPU would start taking element by element all the way from position 0 to position 512. However, during this time, we're still getting samples of the signals. This is where the other section of the buffer comes in. While the USB is taking the already sampled data to the PC, the new samples start filling up from position 513 onward. Then once it's done, CPU takes from 513 onward to the USB, with positions 0-512 now getting filled up with DMA samples. So it's circular. 
+- I think Arnav wanted to work on a Go or C/C++ workflow for decoding, but I wanted to add the CAN decoding stuff to the firmware, since we'll be using the bxCAN protocol to decode just the CAN on the STM32 itself. 
+    - Logic Header (0xAA 0xBB): This is a 516-byte packet for 512 raw GPIO samples for UART, I2C, SPI. 
+    - CAN Header (0xCC 0xDD): A variable length packet of up to 15 bytes that has a hardware-decoded CAN frame. 
+
+- Added an XOR checksum to the end of every packet. I think everybody knows, but it basically just makes sure bytes aren't clipped.
+- Logic packet sequence number (seq_num variable): These increment so we can see if packets were dropped during USB transmissio at all. 
+- Added a bxCAN filter - I got this from a bxCAN source on Google, basically allows CAN frames to be decoded. 
+
 
 ## 832abc5
 
