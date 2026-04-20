@@ -19,7 +19,7 @@ Put all software notes/changelog stuff here. Try to format something like below 
 ```
 
 This format is adopted from [keepachangelog.com](https://keepachangelog.com).
-## 241d8b3
+## 6f83e89
 
 ### Added
 
