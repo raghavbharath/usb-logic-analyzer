@@ -41,13 +41,26 @@ ALL_NAMES   = CHANNEL_NAMES + ["CAN  BUS"]
 ALL_COLORS  = CHANNEL_COLORS + [CAN_COLOR]
 
 
+# Color palette that cycles for each new measurement pair
+MEASURE_COLORS = [
+    "#FFD600",  # yellow
+    "#00E5FF",  # cyan
+    "#FF4081",  # pink
+    "#69FF47",  # green
+    "#FF9100",  # orange
+    "#E040FB",  # purple
+    "#00E676",  # mint
+    "#FF1744",  # red
+]
+
+
 # ──────────────────────────────────────────────────────────────
 #  MEASUREMENT PAIR
 #  Stores one complete pair of vertical markers + horizontal
 #  label line across all plots.
 # ──────────────────────────────────────────────────────────────
 class MeasurePair:
-    def __init__(self, t1: float, t2: float, plots: list):
+    def __init__(self, t1: float, t2: float, plots: list, color: str = "#FFD600"):
         self.t1 = t1
         self.t2 = t2
         self._plots  = plots
@@ -55,7 +68,6 @@ class MeasurePair:
         self._lines2 = []   # solid vertical at t2
         self._hlabel = None # TextItem on middle plot
 
-        color = "#FFD600"
         for p in plots:
             l1 = pg.InfiniteLine(pos=t1, angle=90, movable=False,
                                  pen=pg.mkPen(color, width=1.5))
@@ -66,36 +78,36 @@ class MeasurePair:
             self._lines1.append(l1)
             self._lines2.append(l2)
 
-        # Horizontal label in the middle plot
+        # Horizontal dashed line + label only in the middle plot, at y=0.5
         mid_plot = plots[len(plots) // 2]
         dt = abs(t2 - t1)
         freq_str = f"  {1/(dt*1e-6):.1f} Hz" if dt > 0 else ""
         label_txt = f"Δt={dt:.1f}μs{freq_str}"
-        self._hlabel = pg.TextItem(label_txt, color=color, anchor=(0.5, 0.5))
+
+        # Single dashed horizontal line across the span in the middle plot only
+        self._hline = pg.PlotDataItem(
+            [min(t1, t2), max(t1, t2)], [0.5, 0.5],
+            pen=pg.mkPen(color, width=0.8, style=Qt.DashLine))
+        mid_plot.addItem(self._hline)
+        self._hline_plot = mid_plot
+
+        # Label sits on top of the dashed line (anchor bottom-center)
+        self._hlabel = pg.TextItem(label_txt, color=color, anchor=(0.5, 1.0))
         self._hlabel.setFont(QFont("Courier New", 8))
         mid_t = (t1 + t2) / 2
-        self._hlabel.setPos(mid_t, 0.7)
+        self._hlabel.setPos(mid_t, 0.5)
         mid_plot.addItem(self._hlabel)
         self._label_plot = mid_plot
-
-        # Horizontal connecting line in every plot
-        self._hlines = []
-        for p in plots:
-            hl = pg.PlotDataItem(
-                [min(t1, t2), max(t1, t2)], [0.7, 0.7],
-                pen=pg.mkPen(color, width=0.8, style=Qt.DashLine))
-            p.addItem(hl)
-            self._hlines.append(hl)
 
     def remove(self):
         for i, p in enumerate(self._plots):
             try:
                 p.removeItem(self._lines1[i])
                 p.removeItem(self._lines2[i])
-                p.removeItem(self._hlines[i])
             except Exception:
                 pass
         try:
+            self._hline_plot.removeItem(self._hline)
             self._label_plot.removeItem(self._hlabel)
         except Exception:
             pass
@@ -124,6 +136,7 @@ class WaveformWidget(QWidget):
         # Measure state
         self._measure_mode = False
         self._measure_t1   = None
+        self._measure_color_idx = 0   # cycles through MEASURE_COLORS
         self._pending_lines1 = []   # lines for in-progress first click
         self._pending_lines2 = []
         self._measure_pairs: list[MeasurePair] = []
@@ -309,11 +322,12 @@ class WaveformWidget(QWidget):
             # First click — place pending start lines
             self._clear_pending()
             self._measure_t1 = t
+            color = MEASURE_COLORS[self._measure_color_idx % len(MEASURE_COLORS)]
             for p in self._plots:
                 l1 = pg.InfiniteLine(pos=t, angle=90, movable=False,
-                                     pen=pg.mkPen("#FFD600", width=1.5))
+                                     pen=pg.mkPen(color, width=1.5))
                 l2 = pg.InfiniteLine(pos=t, angle=90, movable=False,
-                                     pen=pg.mkPen("#FFD600", width=1.0,
+                                     pen=pg.mkPen(color, width=1.0,
                                                   style=Qt.DashLine))
                 p.addItem(l1)
                 p.addItem(l2)
@@ -321,8 +335,10 @@ class WaveformWidget(QWidget):
                 self._pending_lines2.append(l2)
         else:
             # Second click — finalise as a permanent MeasurePair
+            color = MEASURE_COLORS[self._measure_color_idx % len(MEASURE_COLORS)]
+            self._measure_color_idx += 1
             self._clear_pending()
-            pair = MeasurePair(self._measure_t1, t, self._plots)
+            pair = MeasurePair(self._measure_t1, t, self._plots, color)
             self._measure_pairs.append(pair)
             self._measure_t1 = None
             self._cursor_lbl.setText("")
@@ -351,6 +367,16 @@ class WaveformWidget(QWidget):
             pair.remove()
         self._measure_pairs = []
         self._measure_t1 = None
+        self._measure_color_idx = 0
+
+    def clear_last_measure(self):
+        """Remove only the most recently completed measurement pair."""
+        self._clear_pending()
+        self._measure_t1 = None
+        if self._measure_pairs:
+            self._measure_pairs[-1].remove()
+            self._measure_pairs.pop()
+            self._measure_color_idx = max(0, self._measure_color_idx - 1)
 
     def set_trigger_marker(self, t_us: float):
         self._trigger_line.setPos(t_us)
@@ -500,8 +526,32 @@ class CANTable(QTableWidget):
 class DecodePanel(QGroupBox):
     def __init__(self):
         super().__init__("Protocol Decode")
-        l = QGridLayout(self)
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 4, 0, 0)
+        outer.setSpacing(0)
+
+        # Scroll area so the bottom panel doesn't need to be resized
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setStyleSheet(f"""
+            QScrollArea {{ border: none; background: transparent; }}
+            QScrollBar:vertical {{
+                background: #111111; width: 8px; border: none;
+            }}
+            QScrollBar::handle:vertical {{
+                background: #333333; border-radius: 4px; min-height: 16px;
+            }}
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                height: 0px;
+            }}
+        """)
+
+        inner = QWidget()
+        l = QGridLayout(inner)
         l.setSpacing(6)
+        l.setContentsMargins(8, 4, 8, 8)
 
         self._uart_chk = QCheckBox("UART")
         self._uart_chk.setChecked(True)
@@ -531,8 +581,8 @@ class DecodePanel(QGroupBox):
         self.sample_rate.setCurrentText("1 MHz")
         l.addWidget(self.sample_rate, 4, 1, 1, 2)
 
-        # Sample depth
-        l.addWidget(QLabel("Depth:"), 5, 0)
+        # Memory depth
+        l.addWidget(QLabel("Mem depth:"), 5, 0)
         self.sample_depth = QComboBox()
         self.sample_depth.addItems(["5 ms", "10 ms", "50 ms", "100 ms", "500 ms"])
         self.sample_depth.setCurrentText("10 ms")
@@ -554,10 +604,18 @@ class DecodePanel(QGroupBox):
         self.measure_chk.setStyleSheet(f"color:{PROTO_COLORS['SPI']};")
         l.addWidget(self.measure_chk, 8, 0, 1, 3)
 
-        clr_m = QPushButton("Clear measurements")
+        clr_last = QPushButton("↩  Reset last marker")
+        clr_last.setStyleSheet("font-size:10px; padding:3px 6px;")
+        l.addWidget(clr_last, 9, 0, 1, 3)
+        self.clear_last_btn = clr_last
+
+        clr_m = QPushButton("Clear all measurements")
         clr_m.setStyleSheet("font-size:10px; padding:3px 6px;")
-        l.addWidget(clr_m, 9, 0, 1, 3)
+        l.addWidget(clr_m, 10, 0, 1, 3)
         self.clear_measures_btn = clr_m
+
+        scroll.setWidget(inner)
+        outer.addWidget(scroll)
 
 
 # ──────────────────────────────────────────────────────────────
@@ -613,14 +671,3 @@ class ConnectionPanel(QGroupBox):
         p, _ = QFileDialog.getOpenFileName(None, "Select Go binary")
         if p:
             self.go_path.setText(p)
-
-
-
-
-
-
-
-
-
-
-
