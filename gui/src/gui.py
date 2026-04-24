@@ -171,6 +171,8 @@ class MainWindow(QMainWindow):
             lambda s: self._wf.set_measure_mode(bool(s)))
         self._decode_panel.scroll_chk.stateChanged.connect(
             lambda s: setattr(self, "_autoscroll", bool(s)))
+        self._decode_panel.clear_last_btn.clicked.connect(
+            self._wf.clear_last_measure)
         self._decode_panel.clear_measures_btn.clicked.connect(
             self._wf.clear_all_measures)
 
@@ -383,9 +385,13 @@ class MainWindow(QMainWindow):
         self._nsamp += len(samples)
         self._logic_buf.append(samples.copy())
 
-        # Keep buffer from growing forever (~10s max)
-        max_chunks = (SAMPLE_RATE * 10) // DATA_CHUNK
-        if len(self._logic_buf) > max_chunks:
+        # Cap buffer to selected memory depth
+        depth_map = {"5 ms": 5, "10 ms": 10, "50 ms": 50,
+                     "100 ms": 100, "500 ms": 500}
+        depth_ms = depth_map.get(
+            self._decode_panel.sample_depth.currentText(), 10)
+        max_chunks = max(1, int((SAMPLE_RATE * depth_ms / 1000) // DATA_CHUNK))
+        while len(self._logic_buf) > max_chunks:
             self._logic_buf.pop(0)
 
         self._time_lbl.setText(f"  {self._nsamp/SAMPLE_RATE*1e3:.1f} ms captured")
@@ -434,7 +440,3 @@ if __name__ == "__main__":
     win = MainWindow(test_mode=args.test)
     win.show()
     sys.exit(app.exec_())
-
-
-
-
