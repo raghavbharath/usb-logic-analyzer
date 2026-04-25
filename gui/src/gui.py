@@ -18,7 +18,7 @@ import argparse
 import numpy as np
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout,
-    QPushButton, QLabel, QToolBar, QSplitter,
+    QPushButton, QLabel, QToolBar, QSplitter, QTabWidget,
     QFileDialog, QMessageBox, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QSize
@@ -71,6 +71,7 @@ class MainWindow(QMainWindow):
         pg.setConfigOption("background", BG)
         pg.setConfigOption("foreground", TXT)
         pg.setConfigOption("antialias", True)
+        #for checkmark on check boxes
         self.setStyleSheet(f"""
             QMainWindow, QWidget {{
                 background:#000000; color:#CCCCCC;
@@ -111,7 +112,13 @@ class MainWindow(QMainWindow):
                 width:14px; height:14px;
                 border:1px solid #333333; border-radius:2px; background:#111111;
             }}
-            QCheckBox::indicator:checked {{ background:{ACCENT}; border-color:{ACCENT}; }}
+
+            QCheckBox::indicator:checked {{
+                border: 1px solid #00E5FF;
+                background: transparent;
+                image: url(checkmark.png);
+            }}
+            
             QLabel {{ color:#666666; font-size:12px; }}
             QLabel#val {{ color:#CCCCCC; font-family:'Courier New'; font-size:12px; }}
         """)
@@ -126,7 +133,7 @@ class MainWindow(QMainWindow):
 
         vsplit = QSplitter(Qt.Vertical)
         vsplit.setHandleWidth(3)
-        vsplit.setOpaqueResize(False)
+        vsplit.setOpaqueResize(True)
         self._wf = WaveformWidget()
         vsplit.addWidget(self._wf)
 
@@ -156,9 +163,42 @@ class MainWindow(QMainWindow):
         sl.setSpacing(8)
         self._decode_panel = DecodePanel()
         self._conn_panel   = ConnectionPanel()
-        sl.addWidget(self._decode_panel)
-        sl.addWidget(self._conn_panel)
-        sl.addStretch()
+
+        tabs = QTabWidget()
+        tabs.addTab(self._conn_panel, "Connection")
+        tabs.addTab(self._decode_panel, "Protocol Decode")
+        sl.addWidget(tabs)
+
+        tabs.setStyleSheet("""
+            QTabWidget::pane {
+                border: 1px solid #222222;
+                background: #000000;
+            }
+
+            QTabBar::tab {
+                background: #111111;
+                color: #CCCCCC;
+                padding: 6px 12px;
+                border: 1px solid #333333;
+                border-bottom: none;
+                min-width: 80px;
+            }
+
+            QTabBar::tab:selected {
+                background: #222222;
+                color: #FFFFFF;
+                border: 1px solid #555555;
+                border-bottom: none;
+            }
+
+            QTabBar::tab:hover {
+                background: #1A1A1A;
+            }
+        """)
+
+        #sl.addWidget(self._decode_panel)
+        #sl.addWidget(self._conn_panel)
+        #sl.addStretch()
         bottom.addWidget(sw)
         bottom.setSizes([850, 300])
 
