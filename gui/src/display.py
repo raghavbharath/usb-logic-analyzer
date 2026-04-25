@@ -149,8 +149,9 @@ class WaveformWidget(QWidget):
         root.setSpacing(0)
 
         # ── Left label column ──────────────────────────────────
+        
         label_col = QWidget()
-        label_col.setFixedWidth(LABEL_WIDTH)
+        #label_col.setFixedWidth(LABEL_WIDTH)
         label_col.setStyleSheet(f"background:#000000; border-right:1px solid {BORDER};")
         lc = QVBoxLayout(label_col)
         lc.setContentsMargins(0, 0, 0, 0)
@@ -180,6 +181,16 @@ class WaveformWidget(QWidget):
         ts.setStyleSheet(f"color:{TXT}; font-size:9px; background:#000000;")
         lc.addWidget(ts)
         root.addWidget(label_col)
+
+        label_scroll = QScrollArea()
+        label_scroll.setWidgetResizable(False)
+        label_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        label_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        label_scroll.setFrameShape(QFrame.NoFrame)
+        label_scroll.setWidget(label_col)
+        label_scroll.setFixedWidth(LABEL_WIDTH)
+
+        root.addWidget(label_scroll)
 
         # ── Right: scroll area containing pyqtgraph ────────────
         scroll = QScrollArea()
@@ -213,8 +224,9 @@ class WaveformWidget(QWidget):
         self._glw.ci.layout.setContentsMargins(0, 0, 0, 0)
         # Fix total height so scroll works
         total_h = CH_HEIGHT * N_CHANNELS + 28
-        self._glw.setMinimumHeight(total_h)
-        self._glw.setMaximumHeight(total_h)
+        inner.setFixedHeight(total_h)
+        #self._glw.setMinimumHeight(total_h)
+        #self._glw.setMaximumHeight(total_h)
 
         for i in range(N_CHANNELS):
             p = self._glw.addPlot(row=i, col=0)
@@ -235,7 +247,6 @@ class WaveformWidget(QWidget):
             p.hideButtons()
             p.showGrid(x=True, y=False, alpha=0.08)
             p.setFixedHeight(CH_HEIGHT)
-
             # CAN row gets an orange top border feel via background
             if i == CAN_CH:
                 p.getViewBox().setBackgroundColor(pg.mkColor(255, 150, 0, 12))
@@ -263,6 +274,7 @@ class WaveformWidget(QWidget):
 
             self._plots.append(p)
             self._curves.append(curve)
+            
 
         # Cursor label on bottom plot
         self._cursor_lbl = pg.TextItem("", color="#CCCCCC", anchor=(0, 1))
@@ -280,6 +292,14 @@ class WaveformWidget(QWidget):
         scroll.setWidget(inner)
         scroll.verticalScrollBar().setSingleStep(15)
         root.addWidget(scroll)
+
+        #for synchronous scrolling
+        scroll.verticalScrollBar().valueChanged.connect(
+            label_scroll.verticalScrollBar().setValue
+        )
+        label_scroll.verticalScrollBar().valueChanged.connect(
+            scroll.verticalScrollBar().setValue
+        )
 
         self._glw.scene().sigMouseMoved.connect(self._on_mouse_move)
         self._glw.scene().sigMouseClicked.connect(self._on_mouse_click)
