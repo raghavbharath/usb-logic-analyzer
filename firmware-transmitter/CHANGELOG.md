@@ -20,6 +20,13 @@ Put all software notes/changelog stuff here. Try to format something like below 
 
 This format is adopted from [keepachangelog.com](https://keepachangelog.com).
 
+## 87d3902
+- Added the looping code for transmitting UART, SPI, I2C, and CAN. 
+- Changed the AutoRetransmission from Enable to Disable. I learned that this basically waits for an ACK signal from the CAN's "slave," but since we have no slave and are just sniffing the bus with the logic analyzer, we need to disable this so that it doesn't infinitely retransmit immediately when ACK is missing. 
+- I kept the transmitting messages simple in strings instead of in HEX (except for CAN, since the max is 8 bytes). 
+- Added the CAN filter
+- We actually don't need interrupts. The blocking loop with HAL_MAX_DELAY actually will wait 49.7 days for a response on timeout lol, so this is just a blocking loop.  
+
 ## bb930f8
 
 ### Added
