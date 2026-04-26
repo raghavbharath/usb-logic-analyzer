@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +51,10 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+// This is a dummy address; since our logic analyzer is just a sniffer,
+// the slave address doesn't even matter. The ACK and timeout issues will
+// be handled later below.
+#define I2C_DEVICE_ADDRESS 0x52
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,6 +109,23 @@ int main(void)
   MX_SPI2_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(1000);
+
+  // Start CAN
+
+  CAN_FilterTypeDef canFilter;
+  canFilter.FilterBank = 0;
+  canFilter.FilterMode = CAN_FILTERMODE_IDMASK;
+  canFilter.FilterScale = CAN_FILTERSCALE_32BIT;
+  canFilter.FilterIdHigh = 0x0000;
+  canFilter.FilterIdLow = 0x0000;
+  canFilter.FilterMaskIdHigh = 0x0000;
+  canFilter.FilterMaskIdLow = 0x0000;
+  canFilter.FilterFIFOAssignment = CAN_RX_FIFO0; /* The data will be received in FIFO0 */
+  canFilter.FilterActivation = ENABLE;
+  HAL_CAN_ConfigFilter(&hcan1, &canFilter); //configures the CAN reception filter
+  HAL_CAN_Start(&hcan1);
+
 
   /* USER CODE END 2 */
 
@@ -112,7 +133,44 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  //UART
+	  	  uint8_t uart_msg[] = "UART Test\r\n";
+	  	  HAL_UART_Transmit(&huart1, uart_msg, sizeof(uart_msg)-1, HAL_MAX_DELAY);
+
+	  	  //SPI
+	  	  uint8_t spi_msg[] = "SPI Test"; //No new lines here bc SPI has no concept of new lines.
+	  	  HAL_SPI_Transmit(&hspi2, spi_msg, sizeof(spi_msg)-1, HAL_MAX_DELAY);
+
+	  	  //I2C
+	  	  uint8_t i2c_msg[] = "I2C Test";
+
+	  	  //Here, instead of MAX_DELAY, we set the timeout to 100
+	  	  // This is bc I2C waits for ACK, but since there's no slave, there will be no ACK
+	  	  // So we wait for 100ms and move on so there's no block
+	  	  HAL_I2C_Master_Transmit(&hi2c1, I2C_DEVICE_ADDRESS <<1, i2c_msg, sizeof(i2c_msg)-1, 100);
+
+	  	  //Deinitialize I2C
+	  	  HAL_I2C_DeInit(&hi2c1);
+
+	  	  //reinitialize I2C
+	  	  HAL_I2C_Init(&hi2c1);
+
+	  	  //CAN
+	  	  CAN_TxHeaderTypeDef txHeader;
+	  	  //we can do a custom message for CAN, but the max is 8 bytes
+	  	  // so it's better to keep in hex
+	  	  uint8_t can_msg[] = {0xCA, 0xFE, 0xBA, 0xBE, 0xDE, 0xAD, 0xBE, 0xEF};
+	  	  uint32_t txMailbox; //the number of the mailbox that transmitted the CAN msg
+	  	  txHeader.StdId = 0x123;
+	  	  txHeader.RTR = CAN_RTR_DATA;
+	  	  txHeader.IDE = CAN_ID_STD;
+	  	  txHeader.DLC = 8;
+	  	  HAL_CAN_AddTxMessage(&hcan1, &txHeader, can_msg, &txMailbox);
+	  	  HAL_Delay(1000);
     /* USER CODE END WHILE */
+
+
 
     /* USER CODE BEGIN 3 */
   }
@@ -143,7 +201,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 4;
   RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   RCC_OscInitStruct.PLL.PLLR = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -189,7 +247,7 @@ static void MX_CAN1_Init(void)
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = ENABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = ENABLE;
+  hcan1.Init.AutoRetransmission = DISABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
