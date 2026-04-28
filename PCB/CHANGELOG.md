@@ -16,6 +16,12 @@ Put all PCB notes/changelog stuff here. Format adopted from [keepachangelog.com]
 ## <older date/hash>
 ```
 
+## d9308a5
+
+- Finished the pcb layout and routing
+- Ordered the pcb at JLCPCB, expected delivery by Friday (May 1st)
+- Added schematic pdf and layout picture
+
 ## 736f2f9
 
 - Finished the schematic, assigned most footprints, and did some of the layout.
