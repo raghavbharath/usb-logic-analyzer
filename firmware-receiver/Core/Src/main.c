@@ -465,7 +465,7 @@ void send_logic_packet(uint8_t *data_ptr)
 	packet[515] = checksum;
 
 	//Monitor for overflows here!
-	if (HAL_UART_Transmit(&huart2, packet, 516, HAL_MAX_DELAY)!= HAL_OK)
+	if (HAL_UART_Transmit(&huart2, packet, 516, 100)!= HAL_OK)
 	{
 		//This means that the PC isn't reading fast enough
 	    static uint32_t dropped_packets = 0;
@@ -547,7 +547,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
         //total bytes to send:
         //Headers(2) + Seq(1) + ID(2) + DLC(1) + Data(DLC) + checksum(1)
         // Total is 7 + DLC
-        HAL_UART_Transmit(&huart2, packet, 7 + rxHeader.DLC, HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, packet, 7 + rxHeader.DLC, 100);
     }
 }
 
