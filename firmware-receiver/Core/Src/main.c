@@ -181,6 +181,7 @@ int main(void)
 	    // Wait half a second
 	    HAL_Delay(2000);
 		*/
+	    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 	    if (send_first_half)
 	    {
 	        send_first_half = 0;
@@ -487,12 +488,14 @@ void HAL_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma) {
 */
 void HAL_DMA_XferHalfCpltCallback(DMA_HandleTypeDef *hdma) {
     if (hdma == &hdma_tim1_up) {
+    	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         send_first_half = 1;  // was: send_logic_packet(&dma_buf[0])
     }
 }
 
 void HAL_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma) {
     if (hdma == &hdma_tim1_up) {
+    	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         send_second_half = 1;  // was: send_logic_packet(&dma_buf[DATA_CHUNK])
     }
 }
