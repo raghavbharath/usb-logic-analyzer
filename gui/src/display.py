@@ -166,7 +166,7 @@ class WaveformWidget(QWidget):
             lbl.setStyleSheet(f"""
                 color: {ALL_COLORS[i]};
                 font-family: 'Courier New';
-                font-size: 11px;
+                font-size: 16px;
                 font-weight: bold;
                 border-bottom: {sep};
                 background: #000000;
@@ -178,7 +178,7 @@ class WaveformWidget(QWidget):
         ts.setFixedHeight(28)
         ts.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         ts.setContentsMargins(8, 0, 4, 0)
-        ts.setStyleSheet(f"color:{TXT}; font-size:9px; background:#000000;")
+        ts.setStyleSheet(f"color:{TXT}; font-size:14px; background:#000000;")
         lc.addWidget(ts)
         root.addWidget(label_col)
 
@@ -501,14 +501,14 @@ class CANTable(QTableWidget):
         self.setStyleSheet(f"""
             QTableWidget {{
                 background:{PANEL}; color:#C0D0E0;
-                font-family:'Courier New'; font-size:11px;
+                font-family:'Courier New'; font-size:16px;
                 border:none;
                 alternate-background-color:#0D0D0D;
                 selection-background-color:#1A3050;
             }}
             QHeaderView::section {{
                 background:#080808; color:{TXT};
-                font-size:10px; font-weight:bold;
+                font-size:15px; font-weight:bold;
                 border:none; border-bottom:1px solid {BORDER}; padding:4px;
             }}
             QScrollBar:vertical {{
@@ -630,7 +630,7 @@ class DecodePanel(QGroupBox):
         self.clear_last_btn = clr_last
 
         clr_m = QPushButton("Clear all measurements")
-        clr_m.setStyleSheet("font-size:10px; padding:3px 6px;")
+        clr_m.setStyleSheet("font-size:15px; padding:3px 6px;")
         l.addWidget(clr_m, 10, 0, 1, 3)
         self.clear_measures_btn = clr_m
 
