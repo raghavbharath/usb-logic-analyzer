@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(f"""
             QMainWindow, QWidget {{
                 background:#000000; color:#CCCCCC;
-                font-family:'Segoe UI',sans-serif; font-size:13px;
+                font-family:'Segoe UI',sans-serif; font-size:18px;
             }}
             QToolBar {{
                 background:#0A0A0A; border-bottom:1px solid #222222;
@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
             QPushButton {{
                 background:#111111; color:#CCCCCC;
                 border:1px solid #333333; border-radius:4px;
-                padding:5px 14px; font-size:12px;
+                padding:5px 14px; font-size:17px;
             }}
             QPushButton:hover {{ background:#1A1A1A; border-color:{ACCENT}; }}
             QPushButton:pressed {{ background:#080808; }}
@@ -99,15 +99,15 @@ class MainWindow(QMainWindow):
             QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
                 background:#111111; color:#CCCCCC;
                 border:1px solid #333333; border-radius:3px;
-                padding:4px 6px; font-size:12px;
+                padding:4px 6px; font-size:17px;
             }}
             QGroupBox {{
                 border:1px solid #222222; border-radius:4px;
-                margin-top:10px; color:#666666; font-size:11px;
+                margin-top:10px; color:#666666; font-size:16px;
             }}
             QGroupBox::title {{ subcontrol-origin:margin; left:8px; color:#666666; }}
             QSplitter::handle {{ background:#222222; }}
-            QCheckBox {{ color:#CCCCCC; spacing:6px; font-size:12px; }}
+            QCheckBox {{ color:#CCCCCC; spacing:6px; font-size:17px; }}
             QCheckBox::indicator {{
                 width:14px; height:14px;
                 border:1px solid #333333; border-radius:2px; background:#111111;
@@ -119,8 +119,8 @@ class MainWindow(QMainWindow):
                 image: url(checkmark.png);
             }}
             
-            QLabel {{ color:#666666; font-size:12px; }}
-            QLabel#val {{ color:#CCCCCC; font-family:'Courier New'; font-size:12px; }}
+            QLabel {{ color:#666666; font-size:17px; }}
+            QLabel#val {{ color:#CCCCCC; font-family:'Courier New'; font-size:17px; }}
         """)
 
     # UI Layout
@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
         vsplit.addWidget(self._wf)
 
         bottom = QSplitter(Qt.Horizontal)
-        bottom.setOpaqueResize(False)
+        bottom.setOpaqueResize(True)
         # CAN log
         can_wrap = QWidget()
         cl = QVBoxLayout(can_wrap)
@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
         can_hdr = QLabel("  CAN FRAME LOG")
         can_hdr.setStyleSheet(f"""
             background:{PANEL}; color:{PROTO_COLORS['CAN']};
-            font-size:10px; font-weight:bold; letter-spacing:2px;
+            font-size:15px; font-weight:bold; letter-spacing:2px;
             padding:4px 8px; border-bottom:1px solid {BORDER};
         """)
         self._can_tbl = CANTable()
@@ -250,7 +250,7 @@ class MainWindow(QMainWindow):
             background:{'#0A2A10' if self.test_mode else '#0A1A2A'};
             color:{'#00FF80' if self.test_mode else ACCENT};
             border:1px solid {BORDER}; border-radius:3px;
-            font-size:10px; font-weight:bold;
+            font-size:15px; font-weight:bold;
             letter-spacing:1px; padding:2px 8px;
         """)
         tb.addWidget(badge)
@@ -303,7 +303,7 @@ class MainWindow(QMainWindow):
         sb.setStyleSheet(f"""
             QStatusBar {{
                 background:{PANEL}; border-top:1px solid {BORDER};
-                color:{TXT}; font-size:10px;
+                color:{TXT}; font-size:15px;
             }}
         """)
         self._status_lbl = QLabel("Ready")
