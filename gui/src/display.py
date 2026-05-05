@@ -31,7 +31,7 @@ from packets import (
 )
 
 CH_HEIGHT   = 75
-LABEL_WIDTH = 115
+LABEL_WIDTH = 140
 N_CHANNELS  = 9   # 8 GPIO + 1 CAN
 
 CAN_CH      = 8   # index of synthetic CAN row
