@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
 
         # Settings panel
         sw = QWidget()
-        sw.setMaximumWidth(300)
+        sw.setMaximumWidth(1000)
         sl = QVBoxLayout(sw)
         sl.setContentsMargins(8, 8, 8, 8)
         sl.setSpacing(8)
