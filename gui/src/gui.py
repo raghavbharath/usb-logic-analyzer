@@ -333,6 +333,7 @@ class MainWindow(QMainWindow):
 
     # Connect and Disconnect
     def _connect(self):
+        self._nsamp = 0
         self._clear()
         if self.test_mode:
             self._sim = Simulator()
