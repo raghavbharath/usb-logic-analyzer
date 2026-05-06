@@ -167,7 +167,7 @@ int main(void)
 	  	  txHeader.IDE = CAN_ID_STD;
 	  	  txHeader.DLC = 8;
 	  	  HAL_CAN_AddTxMessage(&hcan1, &txHeader, can_msg, &txMailbox);
-	  	  HAL_Delay(1000);
+	  	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
 
