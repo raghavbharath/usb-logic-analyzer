@@ -6,12 +6,12 @@ This file has our constants and packet parsing for logic and CAN packets.
 import numpy as np
 
 # Constants
-SAMPLE_RATE = 1_000_000
+SAMPLE_RATE = 10_000 # 1 MHz sampling rate for real, 10kHZ for testing
 DATA_CHUNK = 512
 
 # At 1 MHz, 200,000 samples means 
 # 0.02s or 200ms of data visible at once
-MAX_DISP_SAMPLES = 200_000
+MAX_DISP_SAMPLES = 20_000
 
 CHANNEL_NAMES = [
     "CH1  UART TX", "CH2  UART RX",
@@ -102,5 +102,3 @@ def parse_can(data:bytes):
         return None
     
     return data[2], (data[3] << 8) | data[4], dlc, bytes(data[6:6 + dlc])
-
-

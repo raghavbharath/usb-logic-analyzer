@@ -14,6 +14,7 @@ import sys
 import json
 import os
 import argparse
+import packets
 
 import numpy as np
 from PyQt5.QtWidgets import (
@@ -27,8 +28,7 @@ from PyQt5.QtGui import QFont
 import pyqtgraph as pg
 
 from packets import (
-    SAMPLE_RATE, DATA_CHUNK,
-    BG, PANEL, BORDER, TXT, ACCENT, PROTO_COLORS
+    DATA_CHUNK, BG, PANEL, BORDER, TXT, ACCENT, PROTO_COLORS
 )
 from transport import Simulator, Receiver, save_capture, load_capture
 from display import WaveformWidget, CANTable, DecodePanel, ConnectionPanel
@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
 
         # Settings panel
         sw = QWidget()
-        sw.setMaximumWidth(300)
+        sw.setMaximumWidth(1000)
         sl = QVBoxLayout(sw)
         sl.setContentsMargins(8, 8, 8, 8)
         sl.setSpacing(8)
@@ -318,7 +318,7 @@ class MainWindow(QMainWindow):
         self._time_lbl.setObjectName("val")
         sb.addPermanentWidget(self._time_lbl)
 
-        self._rate_lbl = QLabel(f"  {SAMPLE_RATE//1000} kSa/s")
+        self._rate_lbl = QLabel(f"  {packets.SAMPLE_RATE//1000} kSa/s")
         self._rate_lbl.setObjectName("val")
         sb.addPermanentWidget(self._rate_lbl)
 
@@ -333,6 +333,7 @@ class MainWindow(QMainWindow):
 
     # Connect and Disconnect
     def _connect(self):
+        self._clear()
         if self.test_mode:
             self._sim = Simulator()
             self._sim.logic_ready.connect(self._on_logic)
@@ -354,11 +355,19 @@ class MainWindow(QMainWindow):
 
             protocol = "" if protocol == "None" else protocol
 
-            self._recv = Receiver(host, port, binary, com, duration, protocol, pins)
+            self._recv = Receiver(host, port, binary, com, duration, 
+                                  protocol, pins, 
+                                  sample_rate=self._conn_panel.sample_rate.value(),
+                                  baud=self._conn_panel.baud_rate.value())
             self._recv.logic_ready.connect(self._on_logic)
             self._recv.can_ready.connect(self._on_can)
             self._recv.status_changed.connect(self._status_lbl.setText)
             self._recv.stats_updated.connect(self._on_stats)
+            self._recv.ann_ready.connect(self._on_annotation)
+
+            
+            packets.SAMPLE_RATE = self._conn_panel.sample_rate.value()
+            self._rate_lbl.setText(f"  {self._conn_panel.sample_rate.value()//1000} kSa/s")
             self._recv.start()
 
         self._conn_btn.setEnabled(False)
@@ -430,26 +439,51 @@ class MainWindow(QMainWindow):
                      "100 ms": 100, "500 ms": 500}
         depth_ms = depth_map.get(
             self._decode_panel.sample_depth.currentText(), 10)
-        max_chunks = max(1, int((SAMPLE_RATE * depth_ms / 1000) // DATA_CHUNK))
+        max_chunks = max(1, int((packets.SAMPLE_RATE * depth_ms / 1000) // DATA_CHUNK))
         while len(self._logic_buf) > max_chunks:
             self._logic_buf.pop(0)
 
-        self._time_lbl.setText(f"  {self._nsamp/SAMPLE_RATE*1e3:.1f} ms captured")
+        self._time_lbl.setText(f"  {self._nsamp/packets.SAMPLE_RATE*1e3:.1f} ms captured")
         self._wf.ingest(samples)
 
         if self._autoscroll:
             self._wf.scroll_to(
-                self._nsamp / SAMPLE_RATE * 1e6,
+                self._nsamp / packets.SAMPLE_RATE * 1e6,
                 self._decode_panel.win_spin.value() * 1000)
 
         self._lbl_l.setText(f"Logic: {len(self._logic_buf)} pkts")
+    
+    def _on_annotation(self, ann: dict):
+        print(f"ANN received: {ann}")
+        proto = ann["proto"]
+        t_us  = ann["t"]
+        ch    = ann["ch"]  # already 0-indexed from _parse_annotation
+
+        if proto == "UART":
+            # Show hex value, and ASCII if printable
+            raw = ann["data"]  # e.g. "0x55"
+            try:
+                val = int(raw, 16)
+                char = chr(val) if 32 <= val < 127 else "."
+                label = f"{raw} '{char}'"
+            except Exception:
+                label = raw
+            self._wf.add_annotation(ch, t_us, label, "UART")
+
+        elif proto == "SPI":
+            label = f"MOSI:{ann['mosi']}"
+            self._wf.add_annotation(ch, t_us, label, "SPI")
+
+        elif proto == "I2C":
+            label = f"0x{ann['addr']} {ann['data']}"
+            self._wf.add_annotation(ch, t_us, label, "I2C")
 
     def _on_can(self, frame: dict):
         self._can_tbl.append(frame)
         self._can_buf.append(frame)
         if len(self._can_buf) > 500:
             self._can_buf.pop(0)
-        t_us = self._nsamp / SAMPLE_RATE * 1e6
+        t_us = self._nsamp / packets.SAMPLE_RATE * 1e6
         # Draw synthetic CAN waveform pulse on CAN row
         self._wf.add_can_pulse(t_us, frame["dlc"])
         # Also add annotation label

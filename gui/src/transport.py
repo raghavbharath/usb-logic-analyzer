@@ -25,6 +25,7 @@ import time
 import random
 import json
 import subprocess
+import packets
 import numpy as np
 from PyQt5.QtCore import QThread, pyqtSignal
  
@@ -39,6 +40,7 @@ from packets import (
 # QThread basically lets us run the receiver on a background thread
 # so the GUI is still responsive. Otherwise too laggy
 class Receiver(QThread): 
+    ann_ready = pyqtSignal(object) 
     logic_ready = pyqtSignal(object)
     can_ready = pyqtSignal(object)
     status_changed = pyqtSignal(str)
@@ -48,7 +50,8 @@ class Receiver(QThread):
 
     def __init__(self, host: str, port: int, 
                  go_binary: str, com_port: str, duration_ms: int,
-                 protocol: str = "", pins: str = ""):
+                 protocol: str = "", pins: str = "", 
+                 sample_rate: int = 10000, baud: int = 2400):
         
         super().__init__()
         self.host = host
@@ -58,6 +61,8 @@ class Receiver(QThread):
         self.duration_ms = duration_ms
         self.protocol = protocol
         self.pins = pins
+        self.sample_rate = sample_rate
+        self.baud = baud
         self._stop = False
         self._go_proc = None # holds the go subprocess once it's launched
         self._lc = self._cc = self._dc = 0 # sets logic count, CAN count, dropped count
@@ -70,6 +75,8 @@ class Receiver(QThread):
             self.go_binary, 
             "--port", self.com_port, 
             "--duration", str(self.duration_ms),
+            "--sr", str(self.sample_rate), #10000 - CHANGE IF WE NEED 1,000,000 for real capture
+            "--baud", str(self.baud), #2400 - Same here
         ]
 
         if self.protocol and self.pins:
@@ -79,7 +86,7 @@ class Receiver(QThread):
 
         try: 
             self._go_proc = subprocess.Popen(args)
-            time.sleep(1.0) # just giving Go a moment to open the socket
+            time.sleep(2.0) # just giving Go a moment to open the socket
             return True
         except Exception as e:
             self.status_changed.emit(f"Failed to launch Go: {e}")
@@ -162,7 +169,16 @@ class Receiver(QThread):
 
                     else: 
                         self._dc += 1
-
+                elif buf[0] == ord('A') and buf[1] == ord('N') and buf[2] == ord('N'):
+                    # Text annotation line from Go decoder
+                    newline = buf.find(b'\n')
+                    if newline == -1:
+                        break  # wait for more data
+                    line = buf[:newline].decode('utf-8', errors='ignore')
+                    buf = buf[newline+1:]
+                    ann = _parse_annotation(line)
+                    if ann:
+                        self.ann_ready.emit(ann)
                 else: 
                     buf = buf[1:]
 
@@ -178,6 +194,36 @@ class Receiver(QThread):
     def stop(self):
         self._stop = True
 
+
+def _parse_annotation(line: str) -> dict:
+    """
+    Parse annotation lines from Go decoder.
+    Examples:
+        ANN UART t=521000 ch=1 data=0x55
+        ANN I2C t=3400 ch=7 addr=0x52 data=493243...
+        ANN SPI t=1200 ch=3 mosi=0x53 miso=0x00
+    """
+    try:
+        parts = line.split()
+        if len(parts) < 3 or parts[0] != 'ANN':
+            return None
+        proto = parts[1]  # UART, SPI, I2C
+        fields = {}
+        for p in parts[2:]:
+            if '=' in p:
+                k, v = p.split('=', 1)
+                fields[k] = v
+        return {
+            "proto": proto,
+            "t": float(fields.get("t", 0)),
+            "ch": int(fields.get("ch", 1)) - 1,  # 0-indexed for display
+            "data": fields.get("data", ""),
+            "addr": fields.get("addr", ""),
+            "mosi": fields.get("mosi", ""),
+            "miso": fields.get("miso", ""),
+        }
+    except Exception:
+        return None
 
 # Capture to save and load raw sample data to and from file
 def save_capture(path: str, logic_chunks: list, can_frames: list,
@@ -244,8 +290,8 @@ class Simulator(QThread):
     def _make_logic(self) -> np.ndarray:
         buf = np.zeros(DATA_CHUNK, dtype=np.uint8)
  
-        # UART TX on bit1 (PC1): 115200 baud
-        spb = int(SAMPLE_RATE / 115200)
+        # UART TX on bit1 (PC1): 115200 baud for real testing
+        spb = int(packets.SAMPLE_RATE / 2400) 
         val = self._ubyte
         off = 5
         buf[:off] |= 0x02                    # idle high

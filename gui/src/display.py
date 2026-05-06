@@ -13,6 +13,7 @@ from collections import deque
 
 import numpy as np
 import pyqtgraph as pg
+import packets
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
@@ -25,13 +26,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QColor
 
 from packets import (
-    SAMPLE_RATE, DATA_CHUNK, MAX_DISP_SAMPLES,
+    DATA_CHUNK, MAX_DISP_SAMPLES,
     CHANNEL_NAMES, CHANNEL_COLORS, PROTO_COLORS,
     BG, PANEL, BORDER, GRID, AXIS, TXT, ACCENT
 )
 
 CH_HEIGHT   = 75
-LABEL_WIDTH = 115
+LABEL_WIDTH = 140
 N_CHANNELS  = 9   # 8 GPIO + 1 CAN
 
 CAN_CH      = 8   # index of synthetic CAN row
@@ -405,12 +406,12 @@ class WaveformWidget(QWidget):
     def ingest(self, samples: np.ndarray):
         """Buffer samples, redraw at most every 100ms."""
         n   = len(samples)
-        t0  = self._nsamp / SAMPLE_RATE * 1e6
-        t_new = np.linspace(t0, t0 + n / SAMPLE_RATE * 1e6, n, endpoint=False)
+        t0  = self._nsamp / packets.SAMPLE_RATE * 1e6
+        t_new = np.linspace(t0, t0 + n / packets.SAMPLE_RATE * 1e6, n, endpoint=False)
         self._t_buf.extend(t_new.tolist())
         self._nsamp += n
         for ch in range(8):
-            self._ch_buf[ch].extend(((samples >> (ch + 1)) & 1).tolist())
+            self._ch_buf[ch].extend(((samples >> ch) & 1).tolist())
         # CAN stays at 0 (idle) by default
         self._can_buf.extend([0.0] * n)
 
@@ -590,48 +591,48 @@ class DecodePanel(QGroupBox):
         self._i2c_chk.setChecked(True)
         l.addWidget(self._i2c_chk, 2, 0)
 
-        can_lbl = QLabel("CAN  (decoded by STM32)")
+        can_lbl = QLabel("CAN (decoded by STM32)")
         can_lbl.setStyleSheet(f"color:{PROTO_COLORS['CAN']};")
         l.addWidget(can_lbl, 3, 0, 1, 3)
 
         # Sample rate
-        l.addWidget(QLabel("Sample rate:"), 4, 0)
-        self.sample_rate = QComboBox()
-        self.sample_rate.addItems(["100 kHz", "500 kHz", "1 MHz"])
-        self.sample_rate.setCurrentText("1 MHz")
-        l.addWidget(self.sample_rate, 4, 1, 1, 2)
+        # l.addWidget(QLabel("Sample rate:"), 4, 0)
+        # self.sample_rate = QComboBox()
+        # self.sample_rate.addItems(["100 kHz", "500 kHz", "1 MHz"])
+        # self.sample_rate.setCurrentText("1 MHz")
+        # l.addWidget(self.sample_rate, 4, 1, 1, 2)
 
         # Memory depth
-        l.addWidget(QLabel("Mem depth:"), 5, 0)
+        l.addWidget(QLabel("Mem depth:"), 4, 0)
         self.sample_depth = QComboBox()
         self.sample_depth.addItems(["5 ms", "10 ms", "50 ms", "100 ms", "500 ms"])
         self.sample_depth.setCurrentText("10 ms")
-        l.addWidget(self.sample_depth, 5, 1, 1, 2)
+        l.addWidget(self.sample_depth, 4, 1, 1, 2)
 
         # View window
-        l.addWidget(QLabel("View window:"), 6, 0)
+        l.addWidget(QLabel("View window:"), 5, 0)
         self.win_spin = QDoubleSpinBox()
         self.win_spin.setRange(0.5, 500)
         self.win_spin.setValue(10)
         self.win_spin.setSuffix(" ms")
-        l.addWidget(self.win_spin, 6, 1, 1, 2)
+        l.addWidget(self.win_spin, 5, 1, 1, 2)
 
         self.scroll_chk = QCheckBox("Auto-scroll")
         self.scroll_chk.setChecked(True)
-        l.addWidget(self.scroll_chk, 7, 0, 1, 3)
+        l.addWidget(self.scroll_chk, 6, 0, 1, 3)
 
         self.measure_chk = QCheckBox("⟷  Measure (click 2 points)")
         self.measure_chk.setStyleSheet(f"color:{PROTO_COLORS['SPI']};")
-        l.addWidget(self.measure_chk, 8, 0, 1, 3)
+        l.addWidget(self.measure_chk, 7, 0, 1, 3)
 
         clr_last = QPushButton("↩  Reset last marker")
-        clr_last.setStyleSheet("font-size:10px; padding:3px 6px;")
-        l.addWidget(clr_last, 9, 0, 1, 3)
+        clr_last.setStyleSheet("font-size:15px; padding:3px 6px;")
+        l.addWidget(clr_last, 8, 0, 1, 3)
         self.clear_last_btn = clr_last
 
         clr_m = QPushButton("Clear all measurements")
         clr_m.setStyleSheet("font-size:15px; padding:3px 6px;")
-        l.addWidget(clr_m, 10, 0, 1, 3)
+        l.addWidget(clr_m, 9, 0, 1, 3)
         self.clear_measures_btn = clr_m
 
         scroll.setWidget(inner)
@@ -677,15 +678,30 @@ class ConnectionPanel(QGroupBox):
         self.pins.setPlaceholderText("e.g. tx1rx2")
         l.addWidget(self.pins, 4, 1, 1, 2)
 
-        l.addWidget(QLabel("TCP host:"), 5, 0)
-        self.host = QLineEdit("127.0.0.1")
-        l.addWidget(self.host, 5, 1, 1, 2)
 
-        l.addWidget(QLabel("TCP port:"), 6, 0)
+        l.addWidget(QLabel("Sample rate:"), 5, 0)
+        self.sample_rate = QSpinBox()
+        self.sample_rate.setRange(1000, 1000000)
+        self.sample_rate.setValue(10000)
+        self.sample_rate.setSuffix(" Hz")
+        l.addWidget(self.sample_rate, 5, 1, 1, 2)
+
+        l.addWidget(QLabel("Baud rate:"), 6, 0)
+        self.baud_rate = QSpinBox()
+        self.baud_rate.setRange(300, 115200)
+        self.baud_rate.setValue(2400)
+        l.addWidget(self.baud_rate, 6, 1, 1, 2)
+
+
+        l.addWidget(QLabel("TCP host:"), 7, 0)
+        self.host = QLineEdit("127.0.0.1")
+        l.addWidget(self.host, 7, 1, 1, 2)
+
+        l.addWidget(QLabel("TCP port:"), 8, 0)
         self.port = QSpinBox()
         self.port.setRange(1024, 65535)
-        self.port.setValue(5000)
-        l.addWidget(self.port, 6, 1, 1, 2)
+        self.port.setValue(5001)
+        l.addWidget(self.port, 8, 1, 1, 2)
 
     def _browse(self):
         p, _ = QFileDialog.getOpenFileName(None, "Select Go binary")
