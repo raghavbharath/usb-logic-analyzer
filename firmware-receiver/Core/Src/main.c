@@ -52,8 +52,6 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 #define DATA_CHUNK 512
 #define DMA_BUF_SIZE (DATA_CHUNK*2) // 1024 bytes
-volatile uint8_t send_first_half = 0;
-volatile uint8_t send_second_half = 0;
 
 //The DMA will dump the GPIO samples here
 //I'm using the ping-pong idea we talked about but with the circular array
@@ -66,6 +64,8 @@ volatile uint8_t send_second_half = 0;
 uint8_t dma_buf[DMA_BUF_SIZE];
 static uint8_t logic_seq_num = 0;
 static uint8_t can_seq_num = 0;
+volatile uint8_t send_first_half = 0;
+volatile uint8_t send_second_half = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,6 +77,8 @@ static void MX_USART2_UART_Init(void);
 static void MX_CAN1_Init(void);
 /* USER CODE BEGIN PFP */
 void send_logic_packet(uint8_t *data_ptr);
+void myHalfCallback(DMA_HandleTypeDef *hdma);
+void myCpltCallback(DMA_HandleTypeDef *hdma);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -150,6 +152,8 @@ int main(void)
   //Start TIM1 - 1MHz for DMA sampling
   HAL_TIM_Base_Start(&htim1);
 
+  hdma_tim1_up.XferHalfCpltCallback = myHalfCallback;
+  hdma_tim1_up.XferCpltCallback = myCpltCallback;
   //Start DMA - reads the GPIOC -> IDR into dma_buf on every TIM1 tick, so 1us
   HAL_DMA_Start_IT(&hdma_tim1_up, (uint32_t)&GPIOC->IDR,
 		          (uint32_t)dma_buf, DMA_BUF_SIZE);
@@ -181,17 +185,16 @@ int main(void)
 	    // Wait half a second
 	    HAL_Delay(2000);
 		*/
-	    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-	    if (send_first_half)
-	    {
-	        send_first_half = 0;
-	        send_logic_packet(&dma_buf[0]);
-	    }
-	    if (send_second_half)
-	    {
-	        send_second_half = 0;
-	        send_logic_packet(&dma_buf[DATA_CHUNK]);
-	    }
+	  if (send_first_half)
+	  {
+		  send_first_half = 0;
+		  send_logic_packet(&dma_buf[0]);
+	  }
+	  if (send_second_half)
+	  {
+		  send_second_half = 0;
+		  send_logic_packet(&dma_buf[DATA_CHUNK]);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -473,31 +476,25 @@ void send_logic_packet(uint8_t *data_ptr)
 	    dropped_packets++;
 	}
 }
-/*
-void HAL_DMA_XferHalfCpltCallback(DMA_HandleTypeDef *hdma) {
-    if (hdma == &hdma_tim1_up) {
-    	send_logic_packet(&dma_buf[0]);
-    }
+//void HAL_DMA_XferHalfCpltCallback(DMA_HandleTypeDef *hdma) {
+//    if (hdma == &hdma_tim1_up) {
+//    	send_logic_packet(&dma_buf[0]);
+//    }
+//}
+//
+//void HAL_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma) {
+//    if (hdma == &hdma_tim1_up) {
+//    	send_logic_packet(&dma_buf[DATA_CHUNK]);
+//    }
+//}
+
+void myHalfCallback(DMA_HandleTypeDef *hdma) {
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    send_first_half = 1;
 }
 
-void HAL_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma) {
-    if (hdma == &hdma_tim1_up) {
-    	send_logic_packet(&dma_buf[DATA_CHUNK]);
-    }
-}
-*/
-void HAL_DMA_XferHalfCpltCallback(DMA_HandleTypeDef *hdma) {
-    if (hdma == &hdma_tim1_up) {
-    	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        send_first_half = 1;  // was: send_logic_packet(&dma_buf[0])
-    }
-}
-
-void HAL_DMA_XferCpltCallback(DMA_HandleTypeDef *hdma) {
-    if (hdma == &hdma_tim1_up) {
-    	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        send_second_half = 1;  // was: send_logic_packet(&dma_buf[DATA_CHUNK])
-    }
+void myCpltCallback(DMA_HandleTypeDef *hdma) {
+    send_second_half = 1;
 }
 
 // Fires when a complete CAN frame arrives in the bxCAN receive FIFO
@@ -567,7 +564,6 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-
   }
   /* USER CODE END Error_Handler_Debug */
 }
