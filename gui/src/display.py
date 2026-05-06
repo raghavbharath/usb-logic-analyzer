@@ -242,7 +242,7 @@ class WaveformWidget(QWidget):
             else:
                 p.hideAxis("bottom")
 
-            p.setYRange(-0.2, 1.4)
+            p.setYRange(-0.2, 1.8)
             p.setMouseEnabled(x=True, y=False)
             p.setMenuEnabled(False)
             p.hideButtons()
@@ -450,8 +450,8 @@ class WaveformWidget(QWidget):
     def add_annotation(self, ch: int, t_us: float, label: str, proto: str):
         color = PROTO_COLORS.get(proto, "#FFF")
         txt   = pg.TextItem(label, color=color, anchor=(0.5, 1.0))
-        txt.setFont(QFont("Courier New", 7))
-        txt.setPos(t_us, 1.35)
+        txt.setFont(QFont("Courier New", 9))
+        txt.setPos(t_us, 1.1)
         self._plots[ch].addItem(txt)
         self._anns[ch].append(txt)
         if len(self._anns[ch]) > 200:

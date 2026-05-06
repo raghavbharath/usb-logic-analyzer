@@ -11,7 +11,7 @@ DATA_CHUNK = 512
 
 # At 1 MHz, 200,000 samples means 
 # 0.02s or 200ms of data visible at once
-MAX_DISP_SAMPLES = 20_000
+MAX_DISP_SAMPLES = 50_000
 
 CHANNEL_NAMES = [
     "CH1  UART TX", "CH2  UART RX",
