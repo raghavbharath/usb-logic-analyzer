@@ -1,0 +1,361 @@
+PS C:\Users\ragha\OneDrive\Desktop\ECE692-Final-Project\SignalDecoder> go run . --port COM4 --protocol UART --pins tx1rx2 --sr 10000 --duration 5000 --baud 2400
+2026/05/06 01:35:33 [GetConfig]: Parsing arguments...
+2026/05/06 01:35:33 [parsePins]: Parsing pins argument...
+2026/05/06 01:35:33 [parseUART]: Parsing UART pins...
+2026/05/06 01:35:33 [parseUART]: Using channels 1, 2, for tx and rx
+2026/05/06 01:35:33 [parseUART]: Completed UART pin parsing
+2026/05/06 01:35:33 [GetConfig]: CLI argument error checking complete.
+2026/05/06 01:35:33 [print] Current configuration:
+2026/05/06 01:35:33 [print]   Port:        COM4
+2026/05/06 01:35:33 [print]   Duration:    5000.000000
+2026/05/06 01:35:33 [print]   Sample Rate: 0x2710
+2026/05/06 01:35:33 [print]   Protocol:    1
+2026/05/06 01:35:33 [print]   Pins:        0x1200
+2026/05/06 01:35:33 [Run]: Running for 5000 ms
+2026/05/06 01:35:33 [ReadByteStream]: Opened port.
+2026/05/06 01:35:33 [ReadByteStream]: Started streaming from COM4...
+2026/05/06 01:35:33 [parseLogicPacket]: Logic packet seq=179
+2026/05/06 01:35:33 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:33 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:33 [parseLogicPacket]: Logic packet seq=180
+2026/05/06 01:35:33 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:33 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=181
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=182
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=183
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=184
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=185
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=186
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=187
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=188
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=189
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=521000us TX=0x55
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=525200us TX=0x41
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=529300us TX=0x52
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=533500us TX=0x54
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=537700us TX=0x20
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=541800us TX=0x54
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=546000us TX=0x65
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=550200us TX=0x73
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=554300us TX=0x74
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=558500us TX=0x0D
+2026/05/06 01:35:34 [Run]: UART transfer over tx: t=562700us TX=0x0A
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=190
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=191
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=192
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=193
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=194
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=195
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=196
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=197
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=198
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:34 [parseLogicPacket]: Logic packet seq=199
+2026/05/06 01:35:34 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:34 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=200
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=201
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=202
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=203
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=204
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=205
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=206
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=207
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=208
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=209
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=210
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1593900us TX=0x55
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1598100us TX=0x41
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1602300us TX=0x52
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1606400us TX=0x54
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1610600us TX=0x20
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1614800us TX=0x54
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1618900us TX=0x65
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1623100us TX=0x73
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1627300us TX=0x74
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1631400us TX=0x0D
+2026/05/06 01:35:35 [Run]: UART transfer over tx: t=1635600us TX=0x0A
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=211
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=212
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=213
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=214
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=215
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=216
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=217
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=218
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:35 [parseLogicPacket]: Logic packet seq=219
+2026/05/06 01:35:35 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:35 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=220
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=221
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=222
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=223
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=224
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=225
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=226
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=227
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=228
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=229
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=230
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=231
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2666900us TX=0x55
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2671000us TX=0x41
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2675200us TX=0x52
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2679400us TX=0x54
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2683500us TX=0x20
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2687700us TX=0x54
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2691900us TX=0x65
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2696000us TX=0x73
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2700200us TX=0x74
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2704400us TX=0x0D
+2026/05/06 01:35:36 [Run]: UART transfer over tx: t=2708500us TX=0x0A
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=232
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=233
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=234
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=235
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=236
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=237
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:36 [parseLogicPacket]: Logic packet seq=238
+2026/05/06 01:35:36 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:36 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=239
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=240
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=241
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=242
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=243
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=244
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=245
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=246
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=247
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=248
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=249
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=250
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=251
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=252
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3741500us TX=0x55
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3747300us TX=0x49
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3751400us TX=0x51
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3755600us TX=0x81
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3760600us TX=0x54
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3764800us TX=0x65
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3768900us TX=0x73
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3773100us TX=0x74
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3777300us TX=0x0D
+2026/05/06 01:35:37 [Run]: UART transfer over tx: t=3781400us TX=0x0A
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=253
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=254
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=255
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=0
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=1
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:37 [parseLogicPacket]: Logic packet seq=2
+2026/05/06 01:35:37 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:37 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=3
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=4
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=5
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=6
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=7
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=8
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=9
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=10
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=11
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=12
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=13
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=14
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=15
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=16
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=17
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4817300us TX=0x41
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4821500us TX=0x52
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4825600us TX=0x54
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4829800us TX=0x20
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4834000us TX=0x54
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4838100us TX=0x65
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4842300us TX=0x73
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4846500us TX=0x74
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4850600us TX=0x0D
+2026/05/06 01:35:38 [Run]: UART transfer over tx: t=4854800us TX=0x0A
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=18
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [parseLogicPacket]: Logic packet seq=19
+2026/05/06 01:35:38 [DecodeUART]: Beginning UART Decoding...
+2026/05/06 01:35:38 [DecodeUART]: UART Decoding complete
+2026/05/06 01:35:38 [Run]: Capture complete.
