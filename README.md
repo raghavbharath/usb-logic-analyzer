@@ -8,7 +8,9 @@ This project is a custom USB logic analyzer built around two STM32F446RE Nucleo 
 
 The transmitter Nucleo generates test signals over UART, SPI, I2C, and CAN. The receiver Nucleo samples up to 8 digital channels simultaneously at 1MHz using DMA-driven GPIO capture, packages the raw samples into packets, and streams them to a host PC over USB CDC. A Go application reads the packet stream, decodes UART, SPI, and I2C from the raw samples, and forwards the results to a Python GUI over TCP. CAN frames are decoded inside the STM32 hardware itself by the bxCAN peripheral and forwarded directly. 
 
-## Repository Structure
+## Repository and Branch Structure
+
+Note: This repository is organized across several feature branches, with each of us making contributions in different areas. The `master` branch contains the integrated codebase including the firmware configured for 10kHz sampling over ST-Link USART, which was used during final testing and demonstration. The 1MHz USB CDC configuration and other work can be found in the individual feature branches (`feature/stm32-firmware`, `feature/SignalDecoder`, `feature/GUI`, `feature/PCB`, `feature/3DEnclosure`). The `feature/test` branch contains the final snapshot used during the live demo.
 
 ```
 firmware-receiver/     # STM32 receiver firmware (STM32CubeIDE)
@@ -20,7 +22,6 @@ enclosure/             # 3D printable STL files
 docs/                  # Datasheets and reference manuals
 ```
 
-## Components
 
 ### Firmware
 
