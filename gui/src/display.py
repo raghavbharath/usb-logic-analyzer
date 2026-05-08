@@ -613,7 +613,7 @@ class DecodePanel(QGroupBox):
         l.addWidget(QLabel("View window:"), 5, 0)
         self.win_spin = QDoubleSpinBox()
         self.win_spin.setRange(0.5, 500)
-        self.win_spin.setValue(1)
+        self.win_spin.setValue(100)
         self.win_spin.setSuffix(" ms")
         l.addWidget(self.win_spin, 5, 1, 1, 2)
 
