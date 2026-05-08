@@ -1,1 +1,5 @@
 firmware-receiver/docs/** linguist-vendored
+firmware-receiver/Drivers/** linguist-vendored
+firmware-transmitter/Drivers/** linguist-vendored
+firmware-receiver/Middlewares/** linguist-vendored
+firmware-transmitter/Middlewares/** linguist-vendored
