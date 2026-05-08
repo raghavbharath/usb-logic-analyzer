@@ -1,0 +1,56 @@
+\chapter{Changelog for Firmware}
+\hypertarget{md_CHANGELOG}{}\label{md_CHANGELOG}\index{Changelog for Firmware@{Changelog for Firmware}}
+\label{md_CHANGELOG_autotoc_md0}%
+\Hypertarget{md_CHANGELOG_autotoc_md0}%
+ Put all software notes/changelog stuff here. Try to format something like below to minimize git conflicts\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#\#\ <date,\ or\ commit\ hash>}
+\DoxyCodeLine{}
+\DoxyCodeLine{<notes>}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\#\ Added}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\#\ Changed}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\#\ Removed}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#\#\ <older\ date/hash>}
+\DoxyCodeLine{}
+\DoxyCodeLine{...}
+
+\end{DoxyCode}
+
+
+This format is adopted from \href{https://keepachangelog.com}{\texttt{ keepachangelog.\+com}}.\hypertarget{md_CHANGELOG_autotoc_md1}{}\doxysection{\texorpdfstring{2a7a1ed}{2a7a1ed}}\label{md_CHANGELOG_autotoc_md1}
+\hypertarget{md_CHANGELOG_autotoc_md2}{}\doxysubsection{\texorpdfstring{Added}{Added}}\label{md_CHANGELOG_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Generated the initializing code with Cube\+MX. As long as we don\textquotesingle{}t write code outside the indicated comments, we should be able to regenerate on the fly.
+\item Port C, pins 1 -\/ 8 are GPIO inputs, for the 8 channels respectively. All pulled low internally.
+\item PC0 is intended as a status output LED
+\begin{DoxyItemize}
+\item Solid indicates it\textquotesingle{}s in idle mode
+\item Slow flash indicates it\textquotesingle{}s working
+\item Fast flash indicates error
+\end{DoxyItemize}
+\item USART2 and SWD is connected to onboard programmer (on nucleo board)
+\item PA 12, 11, 9, and 8 are USB FS DP, DM, VBUS\+\_\+sense, and Start Of Frame (SOF) respectively.
+\begin{DoxyItemize}
+\item SOF is a hardware output thing, originating at the host computer, generated every 1ms. We can use it within our code to sync the data packets we send. It is on an output pin in case we need it on an external device, but I don\textquotesingle{}t expect we will. Not sure if we can turn it off.
+\end{DoxyItemize}
+\item Prescaler is 35, and auto-\/reload register (ARR) is 138. Reasoning\+:
+\begin{DoxyItemize}
+\item The ultimate cap on capture speed comes from USB FS constraints. This is realistically going to be \texorpdfstring{$\sim$}{\string~}1\+MBps.
+\item For sending data from STM to PC, we have two options\+:
+\begin{DoxyItemize}
+\item Send a start byte, a byte holding the 8 channels, and a byte for uint\+\_\+8 timestamp ({\ttfamily \mbox{[}Start byte\mbox{]} \mbox{[}Channels\mbox{]} \mbox{[}Timestamp\mbox{]}}). This means one packet (one data point on a channel) will be 3 bytes. At 1MBps we can send 333,333 updates per second. Fast enough for UART, I2C, and low speed CAN and SPI.
+\item Alternative is to send in the format {\ttfamily \mbox{[}Start byte\mbox{]} \mbox{[}N Datapoints\mbox{]} \mbox{[}Timestamp\mbox{]}}. This way, every N bytes sent corresponds to N-\/2 datapoints. USB has a \href{https://community.st.com/t5/stm32-mcus-products/usb-cdc-how-to-increase-speed-baud-rate/td-p/620701}{\texttt{ max packet size of 64 bytes}}, and apparently it\textquotesingle{}s most efficient to send at this rate. If N=62, each 64 bytes sends 62 data points, which is effectively 900,000 data points per second. I\textquotesingle{}d argue this is more effective. We could make N variable in the code.
+\item If we go with the 2nd option, prescaler being 35 and ARR being 1 (0 indexed) will make timer trigger DMA \texorpdfstring{$\sim$}{\string~}1M times per second (system freq = 72MHz); fastest rate. Increasing ARR will slow down the timer effectively, down to ARR = 5 making DMA trigger \texorpdfstring{$\sim$}{\string~}333,333 times per second.
+\item Since we\textquotesingle{}re using UART for now (comms between STM and PC), I\textquotesingle{}ve set ARR to 138, putting DMA at \texorpdfstring{$\sim$}{\string~}14,400 per second (matches 115,200 baud). We can easily increase speed later.
+\end{DoxyItemize}
+\end{DoxyItemize}
+\item GPIO reading DMA is set up using TIM1.
+\item CAN bus {\itshape is} enableable, but not enabled. 
+\end{DoxyItemize}
