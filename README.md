@@ -2,7 +2,7 @@
 
 Main repository: https://github.com/ragusauce4357/ece692-final-project
 
-**Group Members:** Raghav Bharathan (ragusauce4357), Arnav Revankar (avr34), Gonzalo Villanueva, William Dougherty (Will35084), Bryan Galecio (bryangalecio04)
+**Group Members:** Raghav Bharathan (raghavbharath), Arnav Revankar (avr34), Gonzalo Villanueva, William Dougherty (Will35084), Bryan Galecio (bryangalecio04)
 
 This project is a custom USB logic analyzer built around two STM32F446RE Nucleo boards, developed as our final project for ECE 692 at NJIT. The system captures digital signals from an external device under test, decodes UART, SPI, I2C, and CAN protocols using a Go signal decoder, and visualizes the results in real time through a Python GUI.
 
